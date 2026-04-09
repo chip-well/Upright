@@ -1,7 +1,7 @@
 module Upright::Playwright::TraceRecording
   extend ActiveSupport::Concern
 
-  TRACE_VIEWER_URL = "https://trace.playwright.dev/?trace="
+  TRACE_VIEWER_URL = "/trace-viewer/index.html?trace="
 
   included do
     attr_accessor :trace_path

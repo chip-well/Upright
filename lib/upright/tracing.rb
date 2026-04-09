@@ -3,6 +3,10 @@ module Upright::Tracing
     def configure
       current_site = Upright.current_site
 
+      # Disable auto-configured OTLP exporter when no endpoint is set,
+      # otherwise the SDK defaults to localhost:4318 which times out locally
+      ENV["OTEL_TRACES_EXPORTER"] ||= "none" unless Upright.configuration.otel_endpoint
+
       OpenTelemetry::SDK.configure do |c|
         c.service_name = Upright.configuration.service_name
         c.service_version = Upright::VERSION
