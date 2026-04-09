@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## v0.3.0
 
 - Allow host apps to register custom probe types via `config.probe_types.register` (#42)
 - Make probe result stale cleanup thresholds configurable (#44)
