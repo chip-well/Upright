@@ -18,7 +18,7 @@ class Upright::Configuration
   attr_writer :authenticators_path
 
   # Playwright
-  attr_accessor :playwright_server_url
+  attr_accessor :playwright_cli_path
 
   # Authentication
   attr_accessor :auth_provider
@@ -51,7 +51,7 @@ class Upright::Configuration
 
     @probe_types = Upright::ProbeTypeRegistry.new
 
-    @playwright_server_url = ENV["PLAYWRIGHT_SERVER_URL"]
+    @playwright_cli_path = ENV.fetch("PLAYWRIGHT_CLI_PATH", "npx playwright")
     @otel_endpoint = ENV["OTEL_EXPORTER_OTLP_ENDPOINT"]
 
     @auth_provider = :static_credentials

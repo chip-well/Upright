@@ -7,6 +7,7 @@ module Upright::Playwright::Lifecycle
     attr_accessor :context, :page
 
     define_callbacks :page_ready
+    define_callbacks :before_close
     define_callbacks :page_close
   end
 
@@ -16,14 +17,8 @@ module Upright::Playwright::Lifecycle
 
   private
     def with_browser(&block)
-      if ENV["LOCAL_PLAYWRIGHT"]
-        ::Playwright.create(playwright_cli_executable_path: "./node_modules/.bin/playwright") do |playwright|
-          playwright.chromium.launch(headless: false, &block)
-        end
-      else
-        server_url = Upright.configuration.playwright_server_url ||
-                     Rails.application.config_for(:playwright).fetch(:server_url)
-        ::Playwright.connect_to_browser_server(server_url, &block)
+      ::Playwright.create(playwright_cli_executable_path: Upright.configuration.playwright_cli_path) do |playwright|
+        playwright.chromium.launch(headless: !ENV["LOCAL_PLAYWRIGHT"], &block)
       end
     end
 
@@ -33,13 +28,13 @@ module Upright::Playwright::Lifecycle
       run_callbacks :page_ready
       yield
     ensure
-      # Rescue each step independently so a failed close doesn't prevent video capture
+      run_callbacks :before_close
       page&.close rescue Rails.error.report($!)
       context&.close rescue Rails.error.report($!)
       run_callbacks :page_close
     end
 
     def create_context(browser, **options)
-      authenticated_context(browser, options) || browser.new_context(userAgent: user_agent, **options)
+      browser.new_context(userAgent: user_agent, **options)
     end
 end

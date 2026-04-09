@@ -31,7 +31,6 @@ module ActiveSupport
     include IpApiHelper
     include MtrHelper
     include SiteHelper
-    include PlaywrightHelper
     include YabedaTestHelper
 
     def with_env(env_vars)

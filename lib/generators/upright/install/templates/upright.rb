@@ -5,8 +5,8 @@ Upright.configure do |config|
   config.user_agent   = "<%= Rails.application.class.module_parent_name.underscore %>/1.0"
   config.hostname     = Rails.env.local? ? "<%= Rails.application.class.module_parent_name.underscore.dasherize %>.localhost" : "<%= Rails.application.class.module_parent_name.underscore.dasherize %>.com"
 
-  # Playwright browser server URL
-  # config.playwright_server_url = ENV["PLAYWRIGHT_SERVER_URL"]
+  # Playwright CLI path (defaults to "playwright", override with PLAYWRIGHT_CLI_PATH env var)
+  # config.playwright_cli_path = "npx playwright"
 
   # OpenTelemetry endpoint
   # config.otel_endpoint = ENV["OTEL_EXPORTER_OTLP_ENDPOINT"]

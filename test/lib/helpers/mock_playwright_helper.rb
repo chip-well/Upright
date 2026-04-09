@@ -6,10 +6,11 @@ module MockPlaywrightHelper
   end
 
   class MockContext
-    attr_reader :state
+    attr_reader :state, :tracing
 
     def initialize(state = nil)
       @state = state
+      @tracing = MockTracing.new
       @closed = false
     end
 
@@ -19,10 +20,16 @@ module MockPlaywrightHelper
     def closed? = @closed
   end
 
+  class MockTracing
+    def start(**options) = nil
+    def stop(**options) = nil
+  end
+
   class MockPage
     def goto(url, **options) = nil
     def url = "https://example.com/"
     def close = nil
     def on(event, callback) = nil
+    def video = nil
   end
 end

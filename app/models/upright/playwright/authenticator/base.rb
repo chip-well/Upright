@@ -7,14 +7,24 @@ class Upright::Playwright::Authenticator::Base
     new.authenticate_on(page)
   end
 
-  def initialize(browser = nil, context_options = {})
-    @browser = browser
-    @context_options = context_options
+  def initialize
     @storage_state = Upright::Playwright::StorageState.new(service_name)
+  end
+
+  def ensure_authenticated(context, page)
+    @page = page
+    load_cached_storage_state(context)
+    page.goto(signin_redirect_url, timeout: 10.seconds.in_ms)
+
+    unless session_valid_on?(page)
+      authenticate_on(page)
+      @storage_state.save(context.storage_state)
+    end
   end
 
   def authenticate_on(page)
     @page = page
+    setup_page_logging(page)
     authenticate
     self
   end
@@ -22,22 +32,16 @@ class Upright::Playwright::Authenticator::Base
   def session_valid?
     wait_for_network_idle(page)
 
-    if page.url == signin_redirect_url
-      true
-    else
+    unless page.url.start_with?(signin_redirect_url)
       page.goto(signin_redirect_url, timeout: 10.seconds.in_ms)
-      !page.url.include?(signin_path)
     end
+
+    !page.url.include?(signin_path)
   end
 
-  def authenticated_context
-    if (cached_state = @storage_state.load)
-      context = create_context(cached_state)
-      return context if context_has_valid_session?(context)
-      context.close
-    end
-
-    perform_authentication
+  def session_valid_on?(page)
+    wait_for_network_idle(page)
+    !page.url.include?(signin_path)
   end
 
   protected
@@ -50,50 +54,22 @@ class Upright::Playwright::Authenticator::Base
     raise NotImplementedError
   end
 
-  private
-
   def service_name
     raise NotImplementedError
   end
+
+  private
 
   def authenticate
     raise NotImplementedError
   end
 
-  def context_has_valid_session?(context)
-    page = context.new_page
-    page.goto(signin_redirect_url, timeout: 10.seconds.in_ms)
-    !page.url.include?(signin_path)
-  rescue ::Playwright::TimeoutError
-    false
-  ensure
-    page&.close
-  end
-
-  def perform_authentication
-    context = create_context
-    @page = context.new_page
-    setup_page_logging(page)
-
-    authenticate
-
-    state = context.storage_state
-    @storage_state.save(state)
-    context.close
-
-    create_context(state)
-  end
-
-  def user_agent
-    Upright.configuration.user_agent.presence ||
-      Upright::Playwright::Lifecycle::DEFAULT_USER_AGENT
-  end
-
-  def create_context(state = nil)
-    options = { userAgent: user_agent, serviceWorkers: "block" }
-    options[:storageState] = state if state
-    options.merge!(@context_options)
-    @browser.new_context(**options)
+  def load_cached_storage_state(context)
+    if (cached_state = @storage_state.load)
+      cached_state.fetch("cookies", []).each do |cookie|
+        context.add_cookies([cookie])
+      end
+    end
   end
 
   def setup_page_logging(page)
