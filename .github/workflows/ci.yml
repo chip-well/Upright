@@ -83,12 +83,6 @@ jobs:
     permissions:
       contents: read
 
-    services:
-      upright-playwright:
-        image: jacoblincool/playwright:chromium-server-1.55.0 # zizmor: ignore[unpinned-images] -- version tag pins to a specific release
-        ports:
-          - 53333:53333
-
     steps:
       - name: Checkout code
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -101,11 +95,12 @@ jobs:
           ruby-version: ruby-4.0.0
           bundler-cache: true
 
+      - name: Install Playwright
+        run: npm install && npx playwright install --with-deps chromium
+
       - name: Run tests
         env:
           RAILS_ENV: test
-          # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
-          # REDIS_URL: redis://localhost:6379/0
         run: bin/rails test
 
       - name: Keep screenshots from failed system tests
