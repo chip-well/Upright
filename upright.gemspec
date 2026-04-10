@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "typhoeus"
 
   # Playwright (browser automation)
-  spec.add_dependency "playwright-ruby-client", "~> #{Upright::PLAYWRIGHT_VERSION}"
+  spec.add_dependency "playwright-ruby-client", "~> #{Upright::PLAYWRIGHT_VERSION}.0"
 
   # Observability
   spec.add_dependency "prometheus-api-client"
