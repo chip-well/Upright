@@ -7,7 +7,6 @@ module Upright::Playwright::Lifecycle
     attr_accessor :context, :page
 
     define_callbacks :page_ready
-    define_callbacks :before_close
     define_callbacks :page_close
   end
 
@@ -28,7 +27,6 @@ module Upright::Playwright::Lifecycle
       run_callbacks :page_ready
       yield
     ensure
-      run_callbacks :before_close if context
       run_callbacks :page_close do
         page&.close rescue Rails.error.report($!)
         context&.close rescue Rails.error.report($!)

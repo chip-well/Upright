@@ -8,6 +8,7 @@ class Upright::Playwright::AuthenticatorTest < ActiveSupport::TestCase
 
     def signin_redirect_url = "https://example.com/"
     def signin_path = "/signin"
+    def service_name = "test"
 
     private
       def authenticate

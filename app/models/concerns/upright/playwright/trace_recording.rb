@@ -5,7 +5,7 @@ module Upright::Playwright::TraceRecording
     attr_accessor :trace_path
 
     set_callback :page_ready, :before, :start_trace
-    set_callback :before_close, :after, :stop_trace
+    set_callback :page_close, :before, :stop_trace
   end
 
   private
@@ -21,6 +21,9 @@ module Upright::Playwright::TraceRecording
       self.trace_path = trace_dir.join("#{SecureRandom.hex}.zip").to_s
       FileUtils.mkdir_p(trace_dir)
       context.tracing.stop(path: trace_path)
+    rescue => error
+      Rails.error.report(error)
+      self.trace_path = nil
     end
 
     def attach_trace(probe_result)
