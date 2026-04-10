@@ -67,7 +67,7 @@ class Upright::Playwright::Authenticator::Base
     def load_cached_storage_state(context)
       if (cached_state = @storage_state.load)
         cached_state.fetch("cookies", []).each do |cookie|
-          context.add_cookies([cookie])
+          context.add_cookies([ cookie ])
         end
       end
     end

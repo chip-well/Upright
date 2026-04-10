@@ -36,5 +36,4 @@ module Upright::Playwright::TraceRecording
       FileUtils.rm(trace_path)
       self.trace_path = nil
     end
-
 end
