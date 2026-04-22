@@ -45,3 +45,11 @@ playwright_video:
   service_name: local
   byte_size: 100
   checksum: <%= Digest::MD5.base64digest("fake video content") %>
+
+stale_log:
+  key: stale_log_key
+  filename: curl.log
+  content_type: text/plain
+  service_name: local
+  byte_size: 30
+  checksum: <%= Digest::MD5.base64digest("Sample log content for testing") %>
