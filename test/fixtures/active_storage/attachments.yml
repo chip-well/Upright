@@ -22,3 +22,8 @@ playwright_video_artifact:
   name: artifacts
   record: playwright_probe_result (Upright::ProbeResult)
   blob: playwright_video
+
+stale_artifact:
+  name: artifacts
+  record: stale_success (Upright::ProbeResult)
+  blob: stale_log
