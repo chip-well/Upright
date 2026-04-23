@@ -31,12 +31,12 @@ module Upright::ProbeResult::StaleCleanup
       in_batches do |batch|
         batch_ids = batch.pluck(:id)
         attachments = ActiveStorage::Attachment.where(record_type: name, record_id: batch_ids)
-        blob_ids = attachments.pluck(:blob_id)
+        blob_ids = attachments.distinct.pluck(:blob_id)
 
         attachments.delete_all
         batch.delete_all
 
-        ActiveStorage::Blob.where(id: blob_ids).find_each do |blob|
+        ActiveStorage::Blob.unattached.where(id: blob_ids).find_each do |blob|
           blob.purge
         rescue => e
           Rails.error.report(e)
