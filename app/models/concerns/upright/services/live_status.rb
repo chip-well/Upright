@@ -25,14 +25,14 @@ module Upright::Services::LiveStatus
     end
 
     def live_down_fraction
-      response = self.class.prometheus_client.query(
+      response = Upright.prometheus_client.query(
         query: "max(upright:probe_down_fraction{probe_service=\"#{code}\"}) or vector(0)"
       ).deep_symbolize_keys
       response.dig(:result, 0, :value, 1).to_f
     end
 
     def live_down_history(now:)
-      response = self.class.prometheus_client.query_range(
+      response = Upright.prometheus_client.query_range(
         query: "max(upright:probe_down_fraction{probe_service=\"#{code}\"}) or vector(0)",
         start: (now - OUTAGE_LOOKBACK).iso8601,
         end:   now.iso8601,
@@ -40,13 +40,4 @@ module Upright::Services::LiveStatus
       ).deep_symbolize_keys
       response.dig(:result, 0, :values) || []
     end
-
-  class_methods do
-    def prometheus_client
-      Prometheus::ApiClient.client(
-        url: ENV.fetch("PROMETHEUS_URL", "http://localhost:9090"),
-        options: { timeout: 30.seconds }
-      )
-    end
-  end
 end

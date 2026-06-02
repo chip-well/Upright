@@ -62,6 +62,7 @@ class Upright::Configuration
 
     @playwright_cli_path = ENV.fetch("PLAYWRIGHT_CLI_PATH", "npx playwright")
     @otel_endpoint = ENV["OTEL_EXPORTER_OTLP_ENDPOINT"]
+    @prometheus_url = nil
 
     @auth_provider = :static_credentials
     @auth_options = {}
@@ -93,6 +94,10 @@ class Upright::Configuration
 
   def prometheus_dir
     @prometheus_dir || Rails.root.join("tmp", "prometheus")
+  end
+
+  def prometheus_url
+    @prometheus_url || ENV.fetch("PROMETHEUS_URL", "http://localhost:9090")
   end
 
   def video_storage_dir

@@ -23,7 +23,7 @@ class Upright::Rollups::ProbeRollup < Upright::ApplicationRecord
   def self.fetch_uptime_for(day)
     query_time = [ day.end_of_day, Time.current ].min
 
-    response = prometheus_client.query(query: PROMETHEUS_METRIC, time: query_time.iso8601).deep_symbolize_keys
+    response = Upright.prometheus_client.query(query: PROMETHEUS_METRIC, time: query_time.iso8601).deep_symbolize_keys
 
     Array(response[:result]).map do |series|
       {
@@ -32,13 +32,6 @@ class Upright::Rollups::ProbeRollup < Upright::ApplicationRecord
         uptime_fraction: series.dig(:value, 1).to_f
       }
     end
-  end
-
-  def self.prometheus_client
-    Prometheus::ApiClient.client(
-      url: ENV.fetch("PROMETHEUS_URL", "http://localhost:9090"),
-      options: { timeout: 30.seconds }
-    )
   end
 
   def service
