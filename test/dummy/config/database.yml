@@ -41,19 +41,3 @@ test:
     <<: *default
     database: storage/test_queue.sqlite3
     migrations_paths: db/queue_migrate
-
-production:
-  primary:
-    <<: *default
-    database: storage/production.sqlite3
-    migrations_paths:
-      - db/migrate
-      - ../../db/migrate
-  persistent:
-    <<: *default
-    database: storage/production_persistent.sqlite3
-    migrations_paths: ../../db/persistent_migrate
-  queue:
-    <<: *default
-    database: storage/production_queue.sqlite3
-    migrations_paths: db/queue_migrate
