@@ -35,7 +35,6 @@ class Upright::Rollups::ProbeRollup < Upright::ApplicationRecord
   end
 
   def self.uptime_query
-    return PROMETHEUS_METRIC if Rails.env.local?
     %(#{PROMETHEUS_METRIC}{environment="#{Rails.env}"})
   end
 

@@ -17,8 +17,7 @@ class Upright::Probes::Status
       end
 
       def label_selector(probe_type)
-        matchers = [ "alert_severity!=\"\"" ]
-        matchers << "environment=\"#{Rails.env}\"" unless Rails.env.local?
+        matchers = [ "alert_severity!=\"\"", "environment=\"#{Rails.env}\"" ]
         matchers << "type=\"#{probe_type}\"" if probe_type.present?
         "{#{matchers.join(",")}}"
       end

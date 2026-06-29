@@ -42,8 +42,7 @@ module Upright::Services::LiveStatus
     end
 
     def live_down_query
-      matchers = [ %(probe_service="#{code}") ]
-      matchers << %(environment="#{Rails.env}") unless Rails.env.local?
+      matchers = [ %(probe_service="#{code}"), %(environment="#{Rails.env}") ]
       %(max(upright:probe_down_fraction{#{matchers.join(",")}}) or vector(0))
     end
 end
