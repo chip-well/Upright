@@ -13,11 +13,20 @@ class Upright::Rollups::ProbeRollup < Upright::PersistentRecord
 
   def self.rollup_day(day)
     fetch_uptime_for(day).each do |probe_uptime|
-      find_or_create_by(probe_name: probe_uptime.fetch(:probe_name), period_start: day.beginning_of_day) do |rollup|
+      find_or_create_by(
+        probe_name:   probe_uptime.fetch(:probe_name),
+        probe_type:   probe_uptime[:probe_type],
+        probe_target: probe_uptime[:probe_target],
+        period_start: day.beginning_of_day
+      ) do |rollup|
         rollup.probe_service   = probe_uptime[:probe_service]
         rollup.uptime_fraction = probe_uptime.fetch(:uptime_fraction)
       end
     end
+  end
+
+  def probe_key
+    [ probe_name, probe_type, probe_target ]
   end
 
   def self.fetch_uptime_for(day)
@@ -28,6 +37,8 @@ class Upright::Rollups::ProbeRollup < Upright::PersistentRecord
     Array(response[:result]).map do |series|
       {
         probe_name:      series.dig(:metric, :name),
+        probe_type:      series.dig(:metric, :type),
+        probe_target:    series.dig(:metric, :probe_target),
         probe_service:   series.dig(:metric, :probe_service).presence,
         uptime_fraction: series.dig(:value, 1).to_f
       }

@@ -20,8 +20,8 @@ class Upright::Rollups::ProbeRollupTest < ActiveSupport::TestCase
   test "rollup_day creates a rollup per probe uptime with derived status" do
     day = Date.new(2026, 5, 1)
     probe_uptimes = [
-      { probe_name: "Web", probe_service: "example_app", uptime_fraction: 1.0 },
-      { probe_name: "API", probe_service: "example_app", uptime_fraction: 0.85 }
+      { probe_name: "Web", probe_type: "http", probe_target: "https://example.com", probe_service: "example_app", uptime_fraction: 1.0 },
+      { probe_name: "API", probe_type: "http", probe_target: "https://example.com/api", probe_service: "example_app", uptime_fraction: 0.85 }
     ]
 
     Upright::Rollups::ProbeRollup.stubs(:fetch_uptime_for).with(day).returns(probe_uptimes)
@@ -37,11 +37,32 @@ class Upright::Rollups::ProbeRollupTest < ActiveSupport::TestCase
     assert_equal "partial_outage", api.status
   end
 
+  test "rollup_day keeps probes that share a name but differ by type as distinct rows" do
+    day = Date.new(2026, 5, 1)
+    probe_uptimes = [
+      { probe_name: "BC3", probe_type: "traceroute", probe_target: "3.basecamp.com", probe_service: nil, uptime_fraction: 1.0 },
+      { probe_name: "BC3", probe_type: "http", probe_target: "https://app.basecamp.com/up", probe_service: "bc5", uptime_fraction: 0.9 }
+    ]
+
+    Upright::Rollups::ProbeRollup.stubs(:fetch_uptime_for).with(day).returns(probe_uptimes)
+    Upright::Rollups::ProbeRollup.rollup_day(day)
+
+    rollups = Upright::Rollups::ProbeRollup.where(probe_name: "BC3", period_start: day.beginning_of_day)
+    assert_equal 2, rollups.count
+
+    http = rollups.find_by(probe_type: "http")
+    assert_equal "bc5", http.probe_service
+    assert_equal 0.9, http.uptime_fraction
+
+    traceroute = rollups.find_by(probe_type: "traceroute")
+    assert_nil traceroute.probe_service
+  end
+
   test "rollup_day leaves existing rollups unchanged" do
     existing = upright_rollups_probe_rollups(:example_web_may_11)
 
     Upright::Rollups::ProbeRollup.stubs(:fetch_uptime_for).with(existing.period_start.to_date).returns([
-      { probe_name: existing.probe_name, probe_service: existing.probe_service, uptime_fraction: 1.0 }
+      { probe_name: existing.probe_name, probe_type: existing.probe_type, probe_target: existing.probe_target, probe_service: existing.probe_service, uptime_fraction: 1.0 }
     ])
     Upright::Rollups::ProbeRollup.rollup_day(existing.period_start.to_date)
 

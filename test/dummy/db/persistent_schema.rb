@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_02_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_07_000001) do
   create_table "upright_incident_affected_services", force: :cascade do |t|
     t.integer "incident_id", null: false
     t.string "service_code", null: false
@@ -46,10 +46,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_02_000001) do
     t.datetime "period_start", null: false
     t.string "probe_name", null: false
     t.string "probe_service"
+    t.string "probe_target"
+    t.string "probe_type"
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
     t.float "uptime_fraction", null: false
-    t.index ["probe_name", "period_start"], name: "idx_on_probe_name_period_start_3a6029f64e", unique: true
+    t.index ["probe_name", "probe_type", "probe_target", "period_start"], name: "idx_probe_rollups_identity_period", unique: true
     t.index ["probe_service", "period_start"], name: "idx_on_probe_service_period_start_c65e2bccc5"
   end
 
