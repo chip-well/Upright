@@ -19,8 +19,7 @@ class Upright::IncidentTest < ActiveSupport::TestCase
   end
 
   test "record_update appends an update, moves status, and stamps resolved_at on a terminal status" do
-    incident = upright_incidents(:reactive_resolved)
-    incident.update!(status: "investigating", resolved_at: nil)
+    incident = activate(upright_incidents(:reactive_resolved))
 
     incident.record_update(status: "monitoring", body: "Watching recovery.")
     assert_equal "monitoring", incident.reload.status
@@ -41,8 +40,7 @@ class Upright::IncidentTest < ActiveSupport::TestCase
   end
 
   test "active_statuses maps active reactive incident impact to a page status" do
-    incident = upright_incidents(:reactive_resolved)
-    incident.update!(impact: "major", status: "investigating", starts_at: 1.hour.ago, resolved_at: nil)
+    activate upright_incidents(:reactive_resolved), impact: "major"
 
     assert_equal [ :partial_outage ], Upright::Incident.active_statuses
   end
@@ -59,8 +57,7 @@ class Upright::IncidentTest < ActiveSupport::TestCase
   end
 
   test "active, upcoming, and past scopes key off timestamps and resolved_at" do
-    active = upright_incidents(:reactive_other)
-    active.update!(status: "investigating", starts_at: 1.hour.ago, resolved_at: nil)
+    active = activate(upright_incidents(:reactive_other))
     resolved = upright_incidents(:reactive_resolved)
 
     assert_includes Upright::Incident.active, active
@@ -79,4 +76,10 @@ class Upright::IncidentTest < ActiveSupport::TestCase
     assert_includes Upright::Incident.for_service("example_app"), incident
     assert_not_includes Upright::Incident.for_service("internal_tools"), incident
   end
+
+  private
+    def activate(incident, **overrides)
+      incident.update!({ status: "investigating", starts_at: 1.hour.ago, resolved_at: nil }.merge(overrides))
+      incident
+    end
 end
