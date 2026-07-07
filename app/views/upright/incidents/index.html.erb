@@ -22,7 +22,7 @@
       <div class="incident-list">
         <% @current.each do |incident| %>
           <%= render "row", incident: incident,
-                when_label: incident.maintenance? ? maintenance_window_phrase(incident) : "Started #{incident.starts_at.strftime("%b %-d, %H:%M %Z")}" %>
+                when_label: incident.maintenance? ? maintenance_window_description(incident) : "Started #{incident.starts_at.to_fs(:month_day_at_zone)}" %>
         <% end %>
       </div>
     </section>
@@ -33,7 +33,7 @@
       <h2 class="incident-section__title">Upcoming maintenance</h2>
       <div class="incident-list">
         <% @upcoming.each do |incident| %>
-          <%= render "row", incident: incident, when_label: maintenance_window_phrase(incident) %>
+          <%= render "row", incident: incident, when_label: maintenance_window_description(incident) %>
         <% end %>
       </div>
     </section>
@@ -45,7 +45,7 @@
       <div class="incident-list">
         <% @past.each do |incident| %>
           <%= render "row", incident: incident,
-                when_label: "Resolved #{incident.resolved_at&.strftime("%b %-d, %H:%M %Z")}" %>
+                when_label: "Resolved #{incident.resolved_at&.to_fs(:month_day_at_zone)}" %>
         <% end %>
       </div>
     </section>

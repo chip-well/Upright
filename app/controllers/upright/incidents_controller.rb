@@ -2,18 +2,18 @@ class Upright::IncidentsController < Upright::ApplicationController
   before_action :set_incident, only: %i[ edit update destroy ]
 
   def index
-    @current = Upright::Incident.active.order(starts_at: :desc)
+    @current  = Upright::Incident.active.order(starts_at: :desc)
     @upcoming = Upright::Maintenance.upcoming.order(:starts_at)
-    @past = Upright::Incident.past.limit(50)
+    @past     = Upright::Incident.past.limit(50)
   end
 
   def new
-    @incident = build_class.new(starts_at: Time.current)
+    @incident = incident_class.new(starts_at: Time.current)
     @incident.impact ||= "minor" unless @incident.maintenance?
   end
 
   def create
-    @incident = build_class.new(incident_params)
+    @incident = incident_class.new(incident_params)
 
     if @incident.save
       redirect_to incidents_path, notice: "#{@incident.model_name.human} created."
@@ -43,7 +43,7 @@ class Upright::IncidentsController < Upright::ApplicationController
       @incident = Upright::Incident.find(params[:id])
     end
 
-    def build_class
+    def incident_class
       maintenance = ActiveModel::Type::Boolean.new.cast(params[:maintenance])
       maintenance ? Upright::Maintenance : Upright::Incident
     end

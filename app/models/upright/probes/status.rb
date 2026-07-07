@@ -23,7 +23,7 @@ class Upright::Probes::Status
       end
 
       def build_probes(results)
-        grouped = results.group_by { |r| r[:metric].values_at(:name, :type, :probe_target) }
+        grouped = results.group_by { |r| Probe.key_for(**r[:metric]) }
 
         grouped.map do |(_name, _type, _target), series|
           site_statuses = series.map do |s|

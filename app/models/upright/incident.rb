@@ -17,10 +17,8 @@ class Upright::Incident < Upright::PersistentRecord
     reactive.active.map { |incident| IMPACT_STATUS.fetch(incident.impact) }
   end
 
-  has_many :updates, -> { order(created_at: :desc) },
-    class_name: "Upright::IncidentUpdate", inverse_of: :incident, dependent: :destroy
-  has_many :affected_services,
-    class_name: "Upright::IncidentAffectedService", inverse_of: :incident, dependent: :destroy
+  has_many :updates, -> { order(created_at: :desc) }, class_name: "Upright::IncidentUpdate", inverse_of: :incident, dependent: :destroy
+  has_many :affected_services, class_name: "Upright::IncidentAffectedService", inverse_of: :incident, dependent: :destroy
 
   validates :title, :starts_at, presence: true
   validates :status, inclusion: { in: ->(incident) { incident.class::STATUSES } }

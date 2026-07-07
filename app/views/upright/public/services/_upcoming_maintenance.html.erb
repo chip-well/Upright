@@ -5,7 +5,7 @@
       <%= link_to public_incident_path(maintenance), class: "upcoming__item" do %>
         <div class="event__head">
           <span class="event__title"><%= maintenance.title %></span>
-          <span class="upcoming__when"><%= maintenance_window_phrase(maintenance) %></span>
+          <span class="upcoming__when"><%= maintenance_window_description(maintenance) %></span>
         </div>
 
         <% if maintenance.services.any? %>

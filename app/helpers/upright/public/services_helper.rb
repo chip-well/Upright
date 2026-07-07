@@ -11,17 +11,16 @@ module Upright::Public::ServicesHelper
     OVERALL_STATUS_LABELS.fetch(status)
   end
 
-  # Human-readable phrase for a maintenance window, e.g. "Jul 5, 14:00–16:00 UTC".
-  def maintenance_window_phrase(maintenance)
+  def maintenance_window_description(maintenance)
     start, finish = maintenance.starts_at, maintenance.ends_at
     same_day = finish && start.to_date == finish.to_date
 
     if same_day
-      "#{start.strftime("%b %-d, %H:%M")}–#{finish.strftime("%H:%M %Z")}"
+      "#{start.to_fs(:month_day_at)}–#{finish.to_fs(:clock_zone)}"
     elsif finish
-      "#{start.strftime("%b %-d, %H:%M")} – #{finish.strftime("%b %-d, %H:%M %Z")}"
+      "#{start.to_fs(:month_day_at)} – #{finish.to_fs(:month_day_at_zone)}"
     else
-      start.strftime("%b %-d, %H:%M %Z")
+      start.to_fs(:month_day_at_zone)
     end
   end
 
@@ -29,7 +28,7 @@ module Upright::Public::ServicesHelper
     status.to_s.humanize
   end
 
-  def outage_duration_phrase(started_at:)
+  def outage_duration_description(started_at:)
     if started_at
       "for #{distance_of_time_in_words(started_at, Time.current)}"
     else

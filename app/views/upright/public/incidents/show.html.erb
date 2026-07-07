@@ -9,7 +9,7 @@
     <div class="incident-detail__meta">
       <span class="incident-detail__status"><%= status_label(@incident.status) %></span>
       <% if @incident.maintenance? %>
-        <span><%= maintenance_window_phrase(@incident) %></span>
+        <span><%= maintenance_window_description(@incident) %></span>
       <% end %>
       <% if @incident.services.any? %>
         <span><%= @incident.services.map(&:name).to_sentence %></span>

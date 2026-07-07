@@ -9,7 +9,7 @@
         </div>
 
         <% if event.maintenance? %>
-          <p class="event__meta"><%= maintenance_window_phrase(event) %></p>
+          <p class="event__meta"><%= maintenance_window_description(event) %></p>
         <% end %>
 
         <% if event.services.any? %>
