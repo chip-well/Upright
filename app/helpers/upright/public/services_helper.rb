@@ -1,6 +1,3 @@
-require "local_time"
-require LocalTime::Engine.root.join("app/helpers/local_time_helper").to_s
-
 module Upright::Public::ServicesHelper
   include LocalTimeHelper
 
