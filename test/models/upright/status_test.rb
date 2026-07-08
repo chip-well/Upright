@@ -20,4 +20,13 @@ class Upright::StatusTest < ActiveSupport::TestCase
   test "for returns major_outage when below half" do
     assert_equal :major_outage, Upright::Status.for(0.4)
   end
+
+  test "worst returns the highest-priority status present" do
+    assert_equal :major_outage, Upright::Status.worst([ :operational, :major_outage, :degraded ])
+    assert_equal :degraded, Upright::Status.worst([ :operational, :degraded ])
+  end
+
+  test "worst returns operational for an empty list" do
+    assert_equal :operational, Upright::Status.worst([])
+  end
 end

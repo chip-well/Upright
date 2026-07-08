@@ -37,3 +37,19 @@ RAILS_ENV=test bin/rails app:db:migrate     # one-time, after adding a migration
 After this, `schema.rb` is updated and subsequent runs of
 `db:schema:load` will pick up the new tables. Commit `schema.rb`
 alongside the migration file.
+
+### Troubleshooting `ActiveRecord::DatabaseAlreadyExists`
+
+If `bin/rails test` (or `db:test:prepare`) fails with
+`ActiveRecord::DatabaseAlreadyExists` in `SQLiteDatabaseTasks#purge`, there
+are stray sqlite files in the **engine-root** `storage/`. The dummy's
+databases live in `test/dummy/storage/`; `purge` drops the file relative to
+the app root but then `create` checks `File.exist?` relative to the current
+directory, so a leftover `storage/*.sqlite3` in the engine root makes it
+think the database already exists. This happens after running a db task from
+the wrong place. Clear the strays and reset:
+
+```bash
+rm -f storage/*.sqlite3*
+RAILS_ENV=test bin/rails db:drop db:create db:schema:load
+```

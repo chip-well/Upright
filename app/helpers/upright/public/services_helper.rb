@@ -1,20 +1,45 @@
 module Upright::Public::ServicesHelper
+  include LocalTimeHelper
+
   OVERALL_STATUS_LABELS = {
     operational:    "All Systems Operational",
     degraded:       "Some Systems Degraded",
     partial_outage: "Partial Outage",
-    major_outage:   "Major Outage"
+    major_outage:   "Major Outage",
+    maintenance:    "Service Under Maintenance"
   }
 
   def overall_status_label(status)
     OVERALL_STATUS_LABELS.fetch(status)
   end
 
+  def maintenance_window_description(maintenance)
+    start, finish = maintenance.starts_at, maintenance.ends_at
+    same_day = finish && start.to_date == finish.to_date
+
+    if same_day
+      "#{start.to_fs(:month_day_at)}–#{finish.to_fs(:clock_zone)}"
+    elsif finish
+      "#{start.to_fs(:month_day_at)} – #{finish.to_fs(:month_day_at_zone)}"
+    else
+      start.to_fs(:month_day_at_zone)
+    end
+  end
+
+  def local_maintenance_window(event)
+    if event.ends_at
+      safe_join([ local_time(event.starts_at, format: :month_day_at),
+                  local_time(event.ends_at, format: :month_day_at_zone) ], " – ")
+    else
+      local_time(event.starts_at, format: :month_day_at_zone)
+    end
+  end
+
   def status_label(status)
     status.to_s.humanize
   end
 
-  def outage_duration_phrase(started_at:)
+  def outage_duration_description(started_at:)
     if started_at
       "for #{distance_of_time_in_words(started_at, Time.current)}"
     else

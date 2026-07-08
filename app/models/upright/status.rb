@@ -4,6 +4,10 @@ module Upright::Status
 
   # nil fraction means we have no measurement for the period — distinct from
   # :operational, so we return nil rather than guessing.
+  def self.worst(statuses)
+    PRIORITY.find { |status| statuses.include?(status) } || :operational
+  end
+
   def self.for(uptime_fraction)
     if uptime_fraction
       case uptime_fraction

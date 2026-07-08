@@ -1,0 +1,5 @@
+class Upright::IncidentUpdate < Upright::PersistentRecord
+  belongs_to :incident, class_name: "Upright::Incident", inverse_of: :updates
+
+  validates :status, presence: true
+end

@@ -6,7 +6,7 @@
         <span class="status-degraded__name"><%= item[:service].name %></span>
         <span class="status-degraded__detail">
           <%= status_label(item[:status]).downcase %>
-          <%= outage_duration_phrase(started_at: item[:started_at]) %>
+          <% if item[:started_at] %>· <%= local_time_ago item[:started_at] %><% end %>
         </span>
       </li>
     <% end %>

@@ -3,6 +3,8 @@ _fixture:
 
 example_web_may_05:
   probe_name: Web
+  probe_type: http
+  probe_target: https://example.com
   probe_service: example_app
   period_start: 2026-05-05 00:00:00
   uptime_fraction: 0.85
@@ -10,6 +12,8 @@ example_web_may_05:
 
 example_api_may_05:
   probe_name: API
+  probe_type: http
+  probe_target: https://example.com/api
   probe_service: example_app
   period_start: 2026-05-05 00:00:00
   uptime_fraction: 1.0
@@ -17,6 +21,8 @@ example_api_may_05:
 
 example_web_may_11:
   probe_name: Web
+  probe_type: http
+  probe_target: https://example.com
   probe_service: example_app
   period_start: 2026-05-11 00:00:00
   uptime_fraction: 0.95
@@ -24,6 +30,8 @@ example_web_may_11:
 
 example_web_may_12:
   probe_name: Web
+  probe_type: http
+  probe_target: https://example.com
   probe_service: example_app
   period_start: 2026-05-12 00:00:00
   uptime_fraction: 1.0
@@ -31,6 +39,8 @@ example_web_may_12:
 
 example_api_may_12:
   probe_name: API
+  probe_type: http
+  probe_target: https://example.com/api
   probe_service: example_app
   period_start: 2026-05-12 00:00:00
   uptime_fraction: 0.8

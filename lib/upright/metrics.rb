@@ -55,6 +55,11 @@ module Upright::Metrics
               comment: "HTTP response status code",
               aggregation: :max,
               tags: %i[name probe_target probe_service]
+
+            gauge :service_under_maintenance,
+              comment: "Whether a service is under active maintenance (1 = yes, 0 = no)",
+              aggregation: :most_recent,
+              tags: %i[probe_service]
           end
         end
       end

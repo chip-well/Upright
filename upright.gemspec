@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "solid_queue"
   spec.add_dependency "mission_control-jobs"
   spec.add_dependency "geared_pagination"
+  spec.add_dependency "local_time"
 
   # Probe infrastructure
   spec.add_dependency "frozen_record"

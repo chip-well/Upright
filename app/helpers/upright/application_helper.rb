@@ -7,6 +7,10 @@ module Upright::ApplicationHelper
     "#{country_flag(site.country)} #{site.city}"
   end
 
+  def page_title_tag(app_name = "Upright")
+    tag.title [ @page_title, app_name ].compact.join(" · ")
+  end
+
   def upright_stylesheet_link_tag(**options)
     Upright::Engine.root.join("app/assets/stylesheets/upright").glob("*.css")
       .map { |f| "upright/#{f.basename('.css')}" }.sort

@@ -68,6 +68,10 @@ module Upright::Probeable
     try(:service)
   end
 
+  def probe_key
+    [ probe_name, probe_type, probe_target ]
+  end
+
   def probe_alert_severity
     severity = try(:alert_severity)&.to_sym
     ALERT_SEVERITIES.include?(severity) ? severity : :high

@@ -4,6 +4,9 @@
   <%= render "overall_banner", status: @services.overall_status %>
   <%= render "degraded_list", degraded: @services.degraded %>
 
+  <%= render "active_events", incidents: @active_incidents, maintenances: @active_maintenances %>
+  <%= render "upcoming_maintenance", maintenances: @upcoming_maintenances %>
+
   <% @services.by_history.each do |service, history| %>
     <%= render "service", service: service, history: history %>
   <% end %>
