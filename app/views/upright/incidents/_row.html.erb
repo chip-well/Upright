@@ -1,5 +1,4 @@
-<%= link_to edit_incident_path(incident),
-      class: "incident-row incident-row--#{incident.maintenance? ? "maintenance" : incident.impact}" do %>
+<%= link_to edit_incident_path(incident), class: "incident-row incident-row--#{incident.maintenance? ? "maintenance" : incident.impact}" do %>
   <span class="incident-row__spine" aria-hidden="true"></span>
   <div class="incident-row__main">
     <div class="incident-row__top">

@@ -9,7 +9,6 @@ class Upright::IncidentsController < Upright::ApplicationController
 
   def new
     @incident = incident_class.new(starts_at: Time.current)
-    @incident.impact ||= "minor" unless @incident.maintenance?
   end
 
   def create

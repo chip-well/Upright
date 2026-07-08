@@ -18,11 +18,6 @@
 
   <section class="incident-section">
     <h2 class="incident-section__title">Post an update</h2>
-    <% unless flash[:update_posted].nil? %>
-      <p class="composer__flash composer__flash--<%= flash[:update_posted] ? "ok" : "error" %>">
-        <%= flash[:update_posted] ? "Update posted." : "Couldn't post update — check the status and message." %>
-      </p>
-    <% end %>
     <%= form_with url: incident_updates_path(@incident), scope: :incident_update, class: "composer" do |f| %>
       <div class="field">
         <%= f.label :status, "Status", class: "field__label" %>

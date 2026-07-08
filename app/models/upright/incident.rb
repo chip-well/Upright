@@ -5,7 +5,7 @@ class Upright::Incident < Upright::PersistentRecord
 
   enum :status, %w[ investigating monitoring resolved
                     scheduled in_progress completed ].index_with(&:itself)
-  enum :impact, %w[ minor major critical maintenance ].index_with(&:itself), prefix: true
+  enum :impact, %w[ minor major critical maintenance ].index_with(&:itself), prefix: true, default: "minor"
 
   STATUSES          = %w[ investigating monitoring resolved ]
   TERMINAL_STATUSES = %w[ resolved ]
