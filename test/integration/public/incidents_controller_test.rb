@@ -10,6 +10,6 @@ class Upright::Public::IncidentsControllerTest < ActionDispatch::IntegrationTest
     get upright.public_incident_path(incident)
 
     assert_response :success
-    assert_no_match "Lewis Buckley", response.body
+    assert_no_match(/Lewis Buckley/, response.body)
   end
 end
