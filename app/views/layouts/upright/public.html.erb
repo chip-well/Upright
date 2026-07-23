@@ -8,8 +8,10 @@
     <%= upright_stylesheet_link_tag "data-turbo-track": "reload" %>
   </head>
   <body class="public">
+    <%= render "upright/public/branding" %>
     <main class="main">
       <%= yield %>
     </main>
+    <%= render "upright/public/footer" %>
   </body>
 </html>

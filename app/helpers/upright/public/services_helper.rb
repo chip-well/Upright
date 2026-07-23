@@ -57,9 +57,14 @@ module Upright::Public::ServicesHelper
   def uptime_percentage_label(fractions)
     if fractions.present?
       percentage = fractions.sum.fdiv(fractions.size) * 100
-      # Round down so a real outage never reads as 100%; strip zeros so a
-      # flawless window is a bare "100%", not "100.000%".
-      number_to_percentage(percentage, precision: 3, round_mode: :down, strip_insignificant_zeros: true)
+      # A flawless window is a bare "100%". Otherwise round down (so a real
+      # outage never reads as 100%) and always show three decimals for a
+      # consistent, precise read: "99.990%", "99.800%".
+      if percentage >= 100
+        number_to_percentage(100, precision: 0)
+      else
+        number_to_percentage(percentage, precision: 3, round_mode: :down)
+      end
     end
   end
 end

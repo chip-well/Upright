@@ -18,6 +18,35 @@
     padding: calc(var(--block-space) * 3) var(--main-padding);
   }
 
+  .status-header,
+  .status-footer {
+    margin: 0 auto;
+    max-width: 56rem;
+    padding: 0 var(--main-padding);
+  }
+
+  .status-header {
+    align-items: center;
+    display: flex;
+    gap: 0.75rem;
+    padding-top: calc(var(--block-space) * 2);
+  }
+
+  .status-header__label {
+    font-size: var(--text-large);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .status-footer {
+    border-top: var(--border);
+    color: var(--color-ink-medium);
+    font-size: var(--text-small);
+    margin-top: calc(var(--block-space) * 2);
+    padding-bottom: calc(var(--block-space) * 3);
+    padding-top: calc(var(--block-space) * 1.5);
+  }
+
   .status-page__title {
     font-size: var(--text-x-large);
     font-weight: 600;

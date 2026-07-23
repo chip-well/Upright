@@ -12,9 +12,9 @@ module Upright::ApplicationHelper
   end
 
   def upright_stylesheet_link_tag(**options)
-    Upright::Engine.root.join("app/assets/stylesheets/upright").glob("*.css")
+    engine_stylesheets = Upright::Engine.root.join("app/assets/stylesheets/upright").glob("*.css")
       .map { |f| "upright/#{f.basename('.css')}" }.sort
-      .then { |stylesheets| stylesheet_link_tag(*stylesheets, **options) }
+    stylesheet_link_tag(*engine_stylesheets, *Upright.configuration.public_stylesheets, **options)
   end
 
   private

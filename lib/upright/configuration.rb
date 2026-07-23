@@ -48,6 +48,11 @@ class Upright::Configuration
   attr_accessor :public_status_enabled
   attr_reader :public_status_custom_domains
 
+  # Extra stylesheets host apps layer on top of the engine's for the public
+  # status page (theming, branding). Logical asset names, loaded last so their
+  # :root overrides win the cascade.
+  attr_writer :public_stylesheets
+
   def initialize
     @service_name = "upright"
     @user_agent = "Upright/1.0"
@@ -77,10 +82,15 @@ class Upright::Configuration
 
     @public_status_enabled = false
     @public_status_custom_domains = []
+    @public_stylesheets = nil
   end
 
   def public_status_subdomain
     PUBLIC_STATUS_SUBDOMAIN
+  end
+
+  def public_stylesheets
+    Array(@public_stylesheets)
   end
 
   def public_status_custom_domains=(domains)

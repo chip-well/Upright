@@ -15,8 +15,9 @@ class Upright::Public::ServicesHelperTest < ActionView::TestCase
     assert_equal "99.999%", uptime_percentage_label(fractions)
   end
 
-  test "trailing zeros are trimmed" do
-    assert_equal "99.5%", uptime_percentage_label([ 0.995 ])
+  test "always pads to three decimals below 100%" do
+    assert_equal "99.500%", uptime_percentage_label([ 0.995 ])
+    assert_equal "99.800%", uptime_percentage_label([ 0.998 ])
   end
 
   test "floors rather than rounds to three decimals" do
